@@ -1,0 +1,34 @@
+<h1>Umlage</h1>
+<%= form_for(@receipt, as: :ShareReceipt) do |f| %>
+  <% if @receipt.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@receipt.errors.count, "error") %> prohibited this receipt from being saved:</h2>
+
+      <ul>
+      <% @receipt.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+    <div class="field">
+      <%= f.label :category_id %><br>
+      <%= f.select :category_id, options_from_collection_for_select(Category.all, :id, :name) %>
+    </div>
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+    <%= f.label :date %><br>
+    <%= f.date_select :date %>
+  </div>
+  <div class="field">
+    <%= f.label :amount %><br>
+    <%= f.text_field :amount %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

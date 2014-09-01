@@ -1,0 +1,10 @@
+<tr>
+  <td><%= simple_receipt.category_id %></td>
+  <td><%= simple_receipt.description %></td>
+  <td><%= simple_receipt.date %></td>
+  <td><%= simple_receipt.type %></td>
+  <td><%= simple_receipt.amount %>€</td>
+  <td><%= link_to 'Show', simple_receipt %></td>
+  <td><%= link_to 'Edit', edit_receipt_path(simple_receipt) %></td>
+  <td><%= link_to 'Destroy', simple_receipt, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+</tr>

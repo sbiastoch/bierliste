@@ -1,0 +1,2 @@
+class ShareReceipt < Receipt
+end

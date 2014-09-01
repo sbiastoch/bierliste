@@ -1,0 +1,25 @@
+<h1>Listing entries</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Receipt</th>
+      <th>Date</th>
+      <th>Description</th>
+      <th>Amount</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @entries.each do |entry| %>
+        <%= render entry %>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Entry', new_entry_path %>

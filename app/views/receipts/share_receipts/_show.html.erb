@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @receipt.category_id %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @receipt.description %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @receipt.date %>
+</p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @receipt.type %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= @receipt.amount %>
+</p>
+
+<%= link_to 'Edit', edit_receipt_path(@receipt) %> |
+<%= link_to 'Back', receipts_path %>
