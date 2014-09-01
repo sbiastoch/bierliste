@@ -1,0 +1,43 @@
+<%= form_for(@entry) do |f| %>
+  <% if @entry.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@entry.errors.count, "error") %> prohibited this entry from being saved:</h2>
+
+      <ul>
+      <% @entry.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+    <div class="field">
+      <%= f.label :semester_id %><br>
+      <%= f.select :semester_id, options_from_collection_for_select(Semester.all, :id, :semester_name), selected: Semester.find_by(active: true).id %>
+    </div>
+
+    <div class="field">
+      <%= f.label :user_id %><br>
+      <%= f.select :user_id, options_from_collection_for_select(User.all, :id, :name) %>
+    </div>
+
+    <div class="field">
+      <%= f.label :receipt %><br>
+      <%= f.text_field :receipt %>
+    </div>
+  <div class="field">
+    <%= f.label :date %><br>
+    <%= f.date_select :date %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+    <%= f.label :amount %><br>
+    <%= f.text_field :amount %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

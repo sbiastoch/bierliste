@@ -1,0 +1,20 @@
+<h1>Konten der Corpsbrüder</h1>
+<div class="container">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Saldo</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <%= render @users %>
+      </tbody>
+    </table>
+
+    <br>
+
+    <%= link_to 'Neues Konto anlegen', new_user_path %>
+</div>

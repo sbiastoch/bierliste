@@ -1,0 +1,35 @@
+<h1>Listing semesters</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Start</th>
+      <th>End</th>
+      <th>Cash</th>
+      <th>Bank</th>
+      <th>Active</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @semesters.each do |semester| %>
+      <tr>
+        <td><%= semester.start %></td>
+        <td><%= semester.end %></td>
+        <td><%= semester.cash %></td>
+        <td><%= semester.bank %></td>
+        <td><%= semester.active %></td>
+        <td><%= link_to 'Show', semester %></td>
+        <td><%= link_to 'Edit', edit_semester_path(semester) %></td>
+        <td><%= link_to 'Destroy', semester, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Semester', new_semester_path %>
