@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140827160730) do
+ActiveRecord::Schema.define(version: 20140907171123) do
 
   create_table "categories", force: true do |t|
     t.string   "code"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 20140827160730) do
     t.datetime "updated_at"
     t.integer  "semester_id"
     t.float    "amount"
+    t.float    "balance"
   end
 
   create_table "entries", force: true do |t|
@@ -44,6 +45,8 @@ ActiveRecord::Schema.define(version: 20140827160730) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "semester_id"
+    t.string   "credits"
+    t.string   "debits"
   end
 
   create_table "semesters", force: true do |t|
@@ -65,6 +68,7 @@ ActiveRecord::Schema.define(version: 20140827160730) do
     t.string   "remember_token"
     t.string   "status",          default: "F"
     t.float    "balance",         default: 0.0
+    t.boolean  "adh"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

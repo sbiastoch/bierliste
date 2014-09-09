@@ -7,5 +7,6 @@ class Category < ActiveRecord::Base
   validates :amount, presence: true, :numericality => true, :format => { :with => /\A\d{1,10}((,|\.)\d{0,2})?\z/ }
 
   has_many :receipts
+  has_many :entries
   belongs_to :semester
 end

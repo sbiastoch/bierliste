@@ -2,20 +2,15 @@
   <h1 class="<%= ' text-muted' unless @semester.active %>">
     <%= @semester.semester_long_name %>
   </h1>
+
   <p id="notice"><%= notice %></p>
 
-    <strong>Abrechnungsbeginn:</strong>
-    <%= @semester.start %>
+  <strong>Abrechnungsbeginn:</strong>
+  <%= @semester.start %>
 
-    <strong>Abrechnungsende:</strong>
-    <%= @semester.end %>
-<!--
-    <strong>Cash:</strong>
-    <%= @semester.cash %>
+  <strong>Abrechnungsende:</strong>
+  <%= @semester.end %>
 
-    <strong>Bank:</strong>
-    <%= @semester.bank %>
--->
   <table class="table table-striped table-bordered">
     <thead>
     <tr>
@@ -34,10 +29,9 @@
       <th><%= @semester.start %></th>
       <th></th>
       <th></th>
-
       <% Semester.current.categories.all.each do |budget| %>
           <th>
-            <%= budget.amount %>€
+            <%= budget.amount.euro %>
           </th>
       <% end %>
 
@@ -45,13 +39,26 @@
     </thead>
 
     <tbody>
-    <% Semester.current.receipts.all.each do |receipt| %>
-        <tr>
+    <%
+       cats = Semester.current.categories
+       entries = cats.map { |budget| budget.entries }
+       entries = entries.flatten
+       entries = entries.reject { |i| !i.user.nil? }
+       receipt = entries.group_by &:receipt_id
+    %>
+    <% receipt.each do |receipt_entries_ary| %>
+        <% receipt = Receipt.find(receipt_entries_ary[0]) %>
+        <% receipt_entries = receipt_entries_ary[1] %>
+        <tr onclick="location.href='<%= receipt_path(receipt) %>'" style="cursor: pointer">
           <td><%= receipt.code %></td>
           <td><%= receipt.date %></td>
           <td><%= receipt.description %></td>
-          <% Semester.current.categories.all.each do |budget| %>
-              <td><%= receipt.amount if receipt.category.id == budget.id %>&nbsp;</td>
+          <% Semester.current.categories.each do |budget| %>
+              <td>
+              <% receipt_entries.each do |entry| %>
+                  <%= entry.amount.euro if entry.category.id == budget.id %>
+              <% end %>
+              </td>
           <% end %>
         </tr>
     <% end %>
@@ -62,9 +69,15 @@
       <th><%= Date.today %></th>
       <th></th>
       <th></th>
+
       <% Semester.current.categories.all.each do |cat| %>
+          <%
+             cat_entries = cat.entries
+             cat_entries = cat_entries.flatten
+             cat_entries = cat_entries.reject { |i| !i.user.nil? }
+          %>
           <th>
-            <%= (cat.amount.to_f - cat.receipts.all.sum(&:amount)) %> €
+            <%= (cat.amount.to_f - cat_entries.sum(&:amount)).euro %>
           </th>
       <% end %>
     </tr>

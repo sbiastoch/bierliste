@@ -14,10 +14,12 @@ class SimpleReceiptsController < ReceiptsController
               receipt: @receipt,
               user: the_user,
               amount: receipt_params[:amount],
-              date: receipt_params[:date],
+              date: Date.new(receipt_params['date(1i)'].to_i,
+                             receipt_params['date(2i)'].to_i,
+                             receipt_params['date(3i)'].to_i),
               description: receipt_params[:description]
           )
-          the_user.update_attribute(:balance, the_user.balance.to_f - receipt_params[:amount].to_f)
+          the_user.update_attribute(:balance, the_user.balance.to_f - receipt_params[:amount].to_f) unless the_user.nil?
         end
       rescue => e
         flash[:errors] = 'Fehler'

@@ -1,9 +1,18 @@
 <tr>
+  <td>
+    <% unless entry.user.nil? %>
+        <%= link_to entry.user.name, entry.user %>
+    <% else %>
+        <%= link_to entry.category.name, entry.category %>
+    <% end %>
+  </td>
   <td><%= link_to entry.receipt.code, entry.receipt %></td>
   <td><%= entry.date %></td>
   <td><%= entry.description %></td>
-  <td><%= entry.amount %></td>
+  <td><%= entry.amount.to_f.round(2) %>€</td>
+  <% if not (entry.receipt.type.eql? 'ShareReceipt' or entry.receipt.type.eql? 'SimpleReceipt')%>
   <td><%= link_to 'Show', entry %></td>
   <td><%= link_to 'Edit', edit_entry_path(entry) %></td>
   <td><%= link_to 'Destroy', entry, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <% end %>
 </tr>

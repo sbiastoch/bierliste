@@ -1,9 +1,9 @@
 <% provide(:title, @user.name) %>
 <h1>
-  <%= @user.name %>
+  <%= @user.name %><%= ' (adH)' if @user.adh? %>
 </h1>
 <div class="container">
-  <table class="table table-striped">
+  <table class="table table-striped table-hover">
     <tr>
       <th>
         Datum
@@ -19,7 +19,7 @@
       </th>
     </tr>
     <% @user.entries.each do |entry| %>
-        <tr>
+        <tr onclick="location.href='<%= receipt_path(entry.receipt) %>'" style="cursor: pointer">
           <td><%= entry.date.to_s  %></td>
           <td><%= entry.receipt.code %></td>
           <td><%= entry.receipt.description %></td>

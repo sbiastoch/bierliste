@@ -1,10 +1,12 @@
 require 'date'
 
 class Semester < ActiveRecord::Base
+  after_create :create_accounts
+
   scope :current, -> {
     c = where(active: true).first
     if c.nil?
-      Semester.create(
+      Semester.create!(
           start: Date.today,
           end: Date.today + 6.months,
           bank: 0,
@@ -41,5 +43,13 @@ class Semester < ActiveRecord::Base
     else
       'Wintersemester '+s+'/'+e
     end
+  end
+
+  private
+
+  def create_accounts
+    Category.create! code: 'KTO', name: 'Konto', description: 'CC Konto', semester_id: self.id, amount: 0 unless self.categories.where(name:'Konto').any?
+    Category.create! code: 'BAR', name: 'Kasse', description: 'Barbestand in der CC-Kasse', semester_id: self.id, amount: 0 unless self.categories.where(name:'Kasse').any?
+    Category.create! code: 'EI', name: 'Einnahmen', description: 'Sonstige EInnahmen, Budgeteinzahlungen, Einnahmen aus Poena, ...', semester_id: self.id, amount: 0 unless self.categories.where(name:'Einnahmen').any?
   end
 end

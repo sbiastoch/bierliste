@@ -59,29 +59,90 @@ class ReceiptsController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_receipt
-      @receipt = Receipt.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def receipt_params
-      if params[:type] == 'SimpleReceipt'
-        params.require(:SimpleReceipt).permit(:category_id, :description, :date, :type, :amount, :users, :semester_id)
-      elsif params[:type] == 'ShareReceipt'
-        params.require(:ShareReceipt).permit(:category_id, :description, :date, :type, :amount, :users, :semester_id)
+  def format_user_str(str)
+    users = str.to_s.split(',')
+    users = users.map { |i|
+      s = i.split('*')
+      if s.size == 1
+        [s[0].strip => 1.0]
       else
-        params.require(:recept).permit(:category_id, :description, :date, :type, :amount, :users, :semester_id)
+        if s[0].to_s.strip =~ /^(\d+|\d+\.\d+)$/ # multiplikator steht vorne
+          [s[1].strip => s[0].to_f]
+        else
+          [s[0].strip => s[1].to_f]
+        end
       end
-    end
+    }
+    users.flatten
+  end
 
-    def receipt_class
-      if defined? type
-        type.constantize
-      elsif params[:type]
-        params[:type].constantize
-      else
-        'Receipt'.constantize
+  def create_entry(users_str, category, amount)
+    if users_str
+      the_users = format_user_str(users_str)
+      total = the_users.flat_map(&:values).reduce(:+).to_f
+      unit = amount / total
+
+      the_users.each do |name|
+        the_user = User.where(name: name.keys[0]).first
+        if the_user.nil?
+          flash[:error] = 'Nutzer '+name.keys[0] + ' nicht gefunden!'
+      #    redirect_to ('new_'+@type.constantize+'_path').constantize
+        else
+          factor = name.values[0]
+          new_entry category, the_user, factor * unit
+        end
       end
+    else
+      new_entry category, nil, amount # for budget entry
     end
+  end
+
+  def new_entry(category, user, amount)
+
+    Entry.create!(
+        semester: Semester.current,
+        category: category,
+        receipt: @receipt,
+        user: user,
+        amount: amount,
+        date: Date.new(receipt_params['date(1i)'].to_i,
+                       receipt_params['date(2i)'].to_i,
+                       receipt_params['date(3i)'].to_i),
+        description: receipt_params[:description]
+    )
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_receipt
+    @receipt = Receipt.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def receipt_params
+    params.require(:ShareReceipt).permit(
+        :category_id,
+        :description,
+        :date,
+        :type,
+        :amount,
+        :credit_users,
+        :credit_budget,
+        :debit_budget,
+        :debit_users,
+        :credit_radio,
+        :debit_radio,
+        :semester_id
+    )
+  end
+
+  def receipt_class
+    if defined? type
+      type.constantize
+    elsif params[:type]
+      params[:type].constantize
+    else
+      'Receipt'.constantize
+    end
+  end
 end
