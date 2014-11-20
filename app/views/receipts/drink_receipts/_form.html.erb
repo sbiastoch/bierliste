@@ -1,0 +1,40 @@
+<%= form_for(@receipt, as: :DrinkReceipt) do |f| %>
+    <% if @receipt.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@receipt.errors.count, "error") %> prohibited this receipt from being saved:</h2>
+
+          <ul>
+            <% @receipt.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+    <% amounts = [] %>
+    <%= f.fields_for :entries do |ff| %>
+        <%
+           amounts.push '(amount'+ff.object.user_id.to_s+'||0)'
+           amount_vals = []
+           description_vals = [] %>
+        <h2><%#= ff.object.user.fullname %></h2>
+        <% @receipt.drinks.each do |drink, price| %>
+            <%
+               amount_vals.push '('+drink+ff.object.user_id.to_s + '*' + price.to_s+'||0)'
+               description_vals.push '{{'+drink+ff.object.user_id.to_s + '}}*' + drink.humanize
+            %>
+            <%= drink+'/'+price.euro %>:
+            <input type="text" ng-model="<%= drink+ff.object.user_id.to_s %>" placeholder="" value=""/>
+        <% end %>
+
+        <%= ff.hidden_field :user_id, value: ff.object.user.id %>
+        <%= ff.hidden_field :semester_id, value: Semester.current.id %>
+        <%= ff.hidden_field :category_id, value: Semester.current.categories.where(name:'Getränke').first.id %>
+        <%= ff.hidden_field :date, value: Time.now %>
+        <%= ff.hidden_field :receipt_id, value: @receipt.id %>
+        <%= ff.hidden_field :amount, value: '{{'+amount_vals.join('+')+'}}' %>
+        <%= ff.hidden_field :description, value: 'Getränkeabrechnung: '+description_vals.join('+') %>
+    <% end %>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+<% end %>

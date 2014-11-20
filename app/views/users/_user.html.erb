@@ -1,5 +1,26 @@
+<%
+    x = user.balance.to_f
+    r = 0
+   r = x if x > 0
+    g = 0
+   g = -x if x < 0
+    b = 0
+
+    r = 255 if r > 255
+    g = 220 if g > 220
+    b = 255 if b > 255
+    color = 'rgb('+r.to_i.to_s+','+g.to_i.to_s+','+b.to_i.to_s+')'
+
+
+
+   stop = ((user.balance > 150) and (not user.name.eql? 'Lücke II'))
+%>
 <tr>
-  <td><%= link_to user.status, user %></td>
-  <td><%= link_to user.name, user %></td>
-  <td><%= link_to user.balance.to_s+' €', user %></td>
+  <td<%= ' style=background:#ecc;' if stop %>><%= link_to user.status, user %></td>
+  <td<%= ' style=background:#ecc;' if stop %>>
+    <%= link_to user.name, user %>
+    <% if user.adh? %><span class="pull-right">adH</span><% end %>
+    <% if not user.adh? and user.here? %><span class="pull-right muted">aO</span><% end %>
+  </td>
+  <td<%= ' style=background:#ecc;' if stop %>><%= link_to user.balance.to_f.euro, user_path(user), style: 'color: '+color+' !important' %></td>
 </tr>

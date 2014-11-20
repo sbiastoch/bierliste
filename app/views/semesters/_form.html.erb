@@ -27,10 +27,14 @@
     <%= f.label :bank %><br>
     <%= f.text_field :bank %>
   </div>
-  <div class="field">
-    <%= f.label :active %><br>
-    <%= f.check_box :active %>
-  </div>
+    <div class="field">
+      <%= f.label :active %><br>
+      <%= f.check_box :active %>
+    </div>
+    <div class="field">
+      <%= f.label :user %><br>
+      <%= f.select :user, options_for_select(User.cb.map(&:fullname)) %>
+    </div>
   <div class="actions">
     <%= f.submit %>
   </div>

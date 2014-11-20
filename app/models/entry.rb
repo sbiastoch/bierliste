@@ -3,9 +3,11 @@ class Entry < ActiveRecord::Base
   belongs_to :receipt
   belongs_to :semester
   belongs_to :category
-  validates :receipt_id, presence: true
+#  validates :receipt_id, presence: true
 
   before_create {
+
+puts self.inspect
     if self.user.nil?
       self.category.update_attribute(:balance, self.category.balance.to_f - self.amount)
     else

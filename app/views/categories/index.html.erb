@@ -6,6 +6,7 @@
       <th>Code</th>
       <th>Name</th>
       <th>Description</th>
+      <th>Amount</th>
       <th>Semester</th>
       <th></th>
       <th></th>
@@ -19,6 +20,7 @@
         <td><%= category.code %></td>
         <td><%= category.name %></td>
         <td><%= category.description %></td>
+        <td><%= category.amount.euro %></td>
         <td><%= category.semester.semester_name %></td>
         <td><%= link_to 'Show', category %></td>
         <td><%= link_to 'Edit', edit_category_path(category) %></td>

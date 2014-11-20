@@ -1,0 +1,132 @@
+// Place all the styles related to the List controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+@media print {
+  header, .debug_dump, footer {
+    display: none;
+  }
+  .visible-print {
+    display: inherit !important;
+  }
+  .hidden-print {
+    display: none !important;
+  }
+}
+
+.visible-print {
+  display: none;
+}
+
+
+
+#liste {
+
+
+
+  .table > tbody > tr:nth-child(even) > td:nth-child(even),
+  .table > tbody > tr:nth-child(even) > th:nth-child(even) {
+    background-color: #ddd !important;
+  }
+
+  .table > tbody > tr:nth-child(even) > td:nth-child(odd),
+  .table > tbody > tr:nth-child(even) > th:nth-child(odd) {
+    background-color: #b9b9b9 !important;
+  }
+
+  .table >thead >tr > th:nth-child(odd),
+  .table >thead> tr > td:nth-child(odd),
+  .table >tbody >tr > th:nth-child(odd),
+  .table >tbody> tr > td:nth-child(odd),
+  .table >tfoot >tr > th:nth-child(odd),
+  .table >tfoot> tr > td:nth-child(odd) {
+    background-color: #aaa !important;
+  }
+
+  .table {
+    border: 1px solid black;
+  }
+
+  .table th,
+  .table td {
+    border-top: 1px solid #888;
+    border-bottom: 1px solid #888;
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+
+  .table tr {
+
+    height: 10px !important;
+  }
+
+  .table tfoot td,
+  .table tfoot th {
+    vertical-align: middle;
+    border-top: 4px double black;
+  }
+
+  table tr>td:last-child {
+    border-left: 4px double black;
+  }
+
+  th {
+    white-space: nowrap
+  }
+
+  .border-left {
+    border-left: 3px solid #444;
+  }
+  @media print {
+
+    h1 {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      height: 60px;
+    }
+
+    .table {
+      width: 100%;
+      height: 80%;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      margin-top: 60px;
+      page-break-after: always;
+      page-break-before: avoid;
+      page-break-inside: avoid;
+    }
+  }
+}
+
+
+
+.letter {
+
+  @media print {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-top: 10mm;
+  padding-left: 24mm;
+  padding-right: 8mm;
+  padding-bottom: 10mm;
+
+  }
+
+  p {
+    font-size: 14pt;
+    line-height: 150%;
+  }
+  strong {
+    font-size: 16pt;
+    font-weight: bold;
+  }
+}
+

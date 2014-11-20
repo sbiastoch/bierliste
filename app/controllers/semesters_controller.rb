@@ -69,6 +69,6 @@ class SemestersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def semester_params
-      params.require(:semester).permit(:start, :end, :cash, :bank, :active)
+      params.require(:semester).permit(:start, :end, :cash, :bank, :active, :user_id)
     end
 end

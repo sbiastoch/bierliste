@@ -1,0 +1,98 @@
+<h1>Getränkeliste</h1>
+<%
+   y = 2014
+   m = 10
+   users = User.all_for_lists
+   @date = Time.new(y, m)
+%>
+<%= form_for(@receipt, as: :DrinkReceipt) do |f| %>
+    <% if @receipt.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@receipt.errors.count, "error") %> prohibited this receipt from being saved:</h2>
+
+          <ul>
+            <% @receipt.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+    <div id="liste" class="table-responsive">
+      <h1>Getränkeliste <%= l(@date, :format => '%B %Y')  %></h1>
+
+      <table class="table">
+        <thead>
+        <tr>
+          <th></th>
+          <% @receipt.drinks.each do |d| %>
+              <th class="text-center"<%= ' style=width:50%;' if d.first.eql? @receipt.drinks.first.first %>>
+                <%= d.first  %>
+                <%= d.last.euro  %>
+              </th>
+          <% end %>
+
+          <td style="vertical-align: middle;font-size: 1.5em;">&nbsp;&nbsp;&Sigma;&nbsp;&nbsp;</td>
+        </tr>
+        </thead>
+        <tbody>
+        <% @receipt.entries.each do |userid, entries| %>
+
+        <% user = User.find(userid)%>
+            <tr>
+              <th>
+                <%= user.status %> <%= user.name %>
+              </th>
+
+              <%= f.fields_for :entry do |ff| %>
+                  <td>
+                    <%= ff.text_field :amount, style: "border: 0;box-shadow: none; background: transparent" %>
+                  </td>
+              <% end %>
+              <%# @receipt.drinks.each_with_index  do |drink, i| %>
+                  <td>
+                    <%#= f.text_field entries[i], style: "border: 0;box-shadow: none; background: transparent" %>
+                  </td>
+              <%# end %>
+              <td>&nbsp;</td>
+            </tr>
+        <% end %>
+
+        <% (19 - @receipt.entries.size).times do %>
+            <tr>
+              <th>
+                &nbsp;
+              </th>
+              <% @receipt.drinks.each do |d| %>
+                  <td>&nbsp;</td>
+              <% end %>
+              <td>&nbsp;</td>
+            </tr>
+        <% end %>
+
+
+        <tr>
+          <th>
+            SpeF
+          </th>
+          <% @receipt.drinks.each do |d| %>
+              <td>&nbsp;</td>
+          <% end %>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th>
+            CC
+          </th>
+          <% @receipt.drinks.each do |d| %>
+              <td>&nbsp;</td>
+          <% end %>
+          <td>&nbsp;</td>
+        </tr>
+        </tbody>
+
+      </table>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+<% end %>

@@ -1,0 +1,110 @@
+<%
+   m = params['month'].to_i
+   y = params['year'].to_i
+   days = Time.new(y, m).weekdays
+   users = User.all_for_lists
+%>
+<div id="liste" class="table-responsive">
+  <h1>Essensliste <%= l(days.first, :format => '%B %Y')  %></h1>
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th></th>
+      <% days.each do |d| %>
+          <th class="text-center
+            <% if d.monday? %> border-left
+            <% end %>">
+            <%= l(d, :format => '%a.') %>
+            <br>
+            <big><%= l(d, :format => '%d.') %></big>
+          </th>
+      <% end %>
+
+      <td style="vertical-align: middle;font-size: 1.5em">&nbsp;&nbsp;&Sigma;&nbsp;&nbsp;</td>
+    </tr>
+    <tr>
+      <th></th>
+      <% days.each do |d| %>
+          <td class="text-center
+            <% if d.monday? %> border-left
+            <% end %>" style="padding: 0 !important; margin: 0 !important;">
+            <table>
+              <tr>
+                <td style="margin: 0; padding: 0 5px; border: none; width: 50%;" class="text-center">V</td>
+                <td style="margin: 0; padding: 0 5px; border: none; width: 50%; border-left: 1px solid #333" class="text-center">L</td>
+              </tr>
+            </table>
+          </td>
+      <% end %>
+      <td>&nbsp;</td>
+    </tr>
+    </thead>
+    <tbody>
+    <% users.each do |user| %>
+        <tr>
+          <th>
+            <%= user.status %> <%= user.name %>
+          </th>
+          <% days.each do |d| %>
+              <td class="
+                <% if d.monday? %> border-left
+                <% end %>">&nbsp;</td>
+          <% end %>
+          <td>&nbsp;</td>
+        </tr>
+    <% end %>
+
+    <% (19 - users.size).times do %>
+    <tr>
+      <th>
+        &nbsp;
+      </th>
+      <% days.each do |d| %>
+          <td class="
+                <% if d.monday? %> border-left
+                <% end %>">&nbsp;</td>
+      <% end %>
+      <td>&nbsp;</td>
+    </tr>
+<% end %>
+
+
+    <tr>
+      <th>
+        SpeF
+      </th>
+      <% days.each do |d| %>
+          <td class="
+                <% if d.monday? %> border-left
+                <% end %>">&nbsp;</td>
+      <% end %>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th>
+        CC
+      </th>
+      <% days.each do |d| %>
+          <td class="
+                <% if d.monday? %> border-left
+                <% end %>">&nbsp;</td>
+      <% end %>
+      <td>&nbsp;</td>
+    </tr>
+
+    </tbody>
+    <tfoot>
+    <tr style="height: 5em;">
+      <th>
+        <strong><big>Summe</big></strong><br />
+        <small>Wird am Vortag ab <i>18 Uhr</i><br>von Fr. Heininger eingetragen</small>
+      </th>
+      <% days.each do |d| %>
+          <td class="<% if d.monday? %> border-left<% end %>">&nbsp;</td>
+      <% end %>
+      <td>&nbsp;</td>
+    </tr>
+    </tfoot>
+  </table>
+</div>

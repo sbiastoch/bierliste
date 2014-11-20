@@ -16,6 +16,7 @@ class ShareReceiptsController < ReceiptsController
 
       rescue => e
         flash[:error] = 'Fehler: '+e.message
+        puts e.backtrace
         render action: 'new'
       else
         redirect_to @receipt, notice: 'ShareReceipt was successfully created.'
@@ -46,25 +47,25 @@ class ShareReceiptsController < ReceiptsController
     if (credit_users ^ credit_budget) and (debit_users ^ debit_budget)
 
       amount = receipt_params[:amount].to_s.to_f
-      main_category = Category.find(receipt_params[:category_id])
-      debit_category = Category.find(receipt_params[:debit_budget])
-      credit_category = Category.find(receipt_params[:credit_budget])
+      main_category = Category.find(receipt_params[:category_id]) unless receipt_params[:category_id].nil?
+      debit_category = Category.find(receipt_params[:debit_budget]) unless receipt_params[:debit_budget].nil?
+      credit_category = Category.find(receipt_params[:credit_budget]) unless receipt_params[:credit_budget].nil?
 
-      if credit_users
+      if credit_users and receipt_params[:credit_users]
         users_str = receipt_params[:credit_users].to_s
         create_entry(users_str, main_category, -amount)
       end
-      if debit_users
+      if debit_users and receipt_params[:debit_users]
         users_str = receipt_params[:debit_users].to_s
         create_entry(users_str, main_category, amount)
       end
 
-      if credit_budget
+      if credit_budget and !credit_category.nil?
         amount = -amount if %w'Konto Kasse'.include? credit_category.name
         create_entry(nil, credit_category, -amount)
       end
-      if debit_budget
-        amount = -amount if %w'Konto Kasse'.include? credit_category.name
+      if debit_budget and !debit_category.nil?
+        amount = -amount if %w'Konto Kasse'.include? debit_category.name
         create_entry(nil, debit_category, amount)
       end
     else

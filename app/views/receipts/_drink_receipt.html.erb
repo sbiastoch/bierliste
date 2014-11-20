@@ -1,0 +1,10 @@
+<tr>
+  <td><%= drink_receipt.category.name %></td>
+  <td><%= drink_receipt.description %></td>
+  <td><%= drink_receipt.date %></td>
+  <td><%= drink_receipt.type %></td>
+  <td><%= drink_receipt.amount %>€</td>
+  <td><%= link_to 'Show', drink_receipt %></td>
+  <td><%= link_to 'Edit', edit_receipt_path(drink_receipt) %></td>
+  <td><%= link_to 'Destroy', drink_receipt, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+</tr>

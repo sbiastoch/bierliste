@@ -23,7 +23,7 @@ class ShareReceipt < Receipt
 
   def credit_users
     if @credits.try([0])=='U'
-      User.find(@credits[1..(@credits.size - 1)]).all.join(', ')
+      User.find(@credits[1..(@credits.size - 1)])
     else
       @credit_users
     end
@@ -40,8 +40,8 @@ class ShareReceipt < Receipt
   end
 
   def debit_users
-    if @debits.try([0])=='U'
-      User.find(@debits[1..(@debits.size - 1)]).all.join(', ')
+    if @debits.try(&:first).eql? 'U'
+      User.find(self.debits[1..(self.debits.size - 1)])
     else
       @debit_users
     end
@@ -53,8 +53,9 @@ class ShareReceipt < Receipt
   end
 
   def credit_budget
-    if self.credits.try([0])=='B'
-      Category.find(self.credits[1..(self.credits.size - 1)]).first
+    if self.credits.try(:first)=='B'
+      id = self.credits[1..(self.credits.size - 1)]
+      Category.find(id)
     else
       @credit_budget
     end
@@ -66,8 +67,9 @@ class ShareReceipt < Receipt
   end
 
   def debit_budget
-    if self.debits.try([0])=='B'
-      Category.find(self.debits[1..(self.debits.size - 1)]).first
+    if self.debits.try(:first)=='B'
+      puts id = self.debits[1..(self.debits.size - 1)]
+      Category.find(id)
     else
       @debit_budget
     end
@@ -79,12 +81,12 @@ class ShareReceipt < Receipt
   end
 
   def credit_radio
-    if @credit_users.to_s.empty? and @credit_budget
-      if Category.find(@credit_budget).first.name.eql? 'Kasse'
+    if @credit_users.to_s.empty? and !@credit_budget.to_s.empty?
+      if Category.find(@credit_budget).name.eql? 'Kasse'
         'cash'
-      elsif Category.find(@credit_budget).first.name.eql? 'Konto'
+      elsif Category.find(@credit_budget).name.eql? 'Konto'
         'kto'
-      elsif Category.find(@credit_budget).first.name.eql? 'Einnahmen'
+      elsif Category.find(@credit_budget).name.eql? 'Einnahmen'
         'einnahmen'
       else
         'budget'
@@ -99,12 +101,12 @@ class ShareReceipt < Receipt
   end
 
   def debit_radio
-    if @debit_users.to_s.empty? and @debit_budget
-      if Category.find(@debit_budget).first.name.eql? 'Kasse'
+    if @debit_users.to_s.empty? and !@debit_budget.to_s.empty?
+      if Category.find(@debit_budget).name.eql? 'Kasse'
         'cash'
-      elsif Category.find(@debit_budget).first.name.eql? 'Konto'
+      elsif Category.find(@debit_budget).name.eql? 'Konto'
         'kto'
-      elsif Category.find(@debit_budget).first.name.eql? 'Konto'
+      elsif Category.find(@debit_budget).name.eql? 'Konto'
         'einnahmen'
       else
         'budget'

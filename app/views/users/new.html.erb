@@ -6,7 +6,7 @@
     <%= form_for(@user) do |f| %>
         <%= render 'shared/error_messages' %>
         <%= f.label :status %>
-        <%= f.select :status, %w'Gast SpeF CK F CB iaCB AH EM' %>
+        <%= f.select :status, %w'Gast SpeF CK VG F CB iaCB idC iaIdC AH EM Kassenwart Haushälter Corps Verbindung' %>
 
         <%= f.label :name %>
         <%= f.text_field :name %>
@@ -16,6 +16,9 @@
 
         <%= f.label :adh %>
         <%= f.check_box :adh %>
+
+        <%= f.label :here %>
+        <%= f.check_box :here %>
 
         <%= f.label :password %>
         <%= f.password_field :password %>

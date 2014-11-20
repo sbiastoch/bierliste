@@ -6,6 +6,16 @@ SampleApp::Application.routes.draw do
 
   resources :entries
 
+  get '/lists/food/' => 'list#food', month: Time.now.month.next, year: Time.now.year
+  get '/lists/food/:month' => 'list#food', year: Time.now.year
+  get '/lists/food/:year/:month' => 'list#food'
+
+  get '/lists/poena/' => 'list#poena'
+
+  get '/lists/drinks/' => 'list#drinks', month: Time.now.month.next, year: Time.now.year
+  get '/lists/drinks/:month' => 'list#drinks', year: Time.now.year
+  get '/lists/drinks/:year/:month' => 'list#drinks'
+
   root  'users#index'
   match '/signup',  to: 'users#new',            via: 'get'
   get '/home'     => 'static_pages#home'
@@ -27,10 +37,14 @@ SampleApp::Application.routes.draw do
 #  get '/receipts/share_receipts', to: 'receipts#index', type: 'ShareReceipt'
 #  get '/receipts/share_receipts/new', to: 'receipts#new', type: 'ShareReceipt'
 
+  get '/share_receipts/new' => 'share_receipts#new', type: 'ShareReceipt', show: 'simple'
+  get '/share_receipts/new/payout' => 'share_receipts#new', type: 'ShareReceipt', show: 'payout'
+  get '/share_receipts/new/deposit' => 'share_receipts#new', type: 'ShareReceipt', show: 'deposit'
 
   #resources :receipts do
     resources :simple_receipts, type: 'SimpleReceipt'
-    resources :share_receipts, type: 'ShareReceipt'
+  resources :drink_receipts, type: 'DrinkReceipt'
+  resources :share_receipts, type: 'ShareReceipt'
   #end
   resources :receipts
 

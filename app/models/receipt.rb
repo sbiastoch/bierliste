@@ -8,8 +8,8 @@ class Receipt < ActiveRecord::Base
     +CB => Rechnung an CB
     -CB => Auslagen von CB
 
-    Bsp					        Gezahlt 		  Gutschrift  Szenario
-    ========================================================================================
+    Bsp					        Gezahlt 		  Gutschrift  Szenario                          Abgebildet durch
+    =================================================================================================
     SpeF-Grillen		    -Konto/Kasse	+Budget			CC zahlt von Budget
                         -CB				    +Budget			CB geht in Vorkasse für Budget
     Grillen				      -Konto/Kasse	+CBs			  CC geht in Vorkasse für CB
@@ -20,6 +20,10 @@ class Receipt < ActiveRecord::Base
     Telefon-Spende AH   -Budget   		+CB 			  Virtuelle Überweisung
     Dauerauftrag 		    -CB				    +Konto			Überweisung
     Auszahlung Guthaben -Konto/Kasse  +CB         Auszahlung
+
+Einzahlung an CC
+Auszahlung CC-Guthaben
+Überweisung
 
 
 Also:
@@ -47,11 +51,17 @@ Lastschrift an [Kasse | Konto | CB | CBs | Budget=Kategorie]
 CLASSES:
 
 Ort     VZ-Gutschrift VZ-Lastschrift
-CC      +             -
+KTO/BAR +             -
 Spende  +             -
 Budget  -             +
 CB      -             +
 
+
+
+
+CC hat Rechnung für CB bezahlt
+CB kauft etwas für CC
+CB kauft etwas für CB
 
 =end
 

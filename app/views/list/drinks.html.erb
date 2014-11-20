@@ -1,0 +1,78 @@
+<%
+   date = Time.new(params[:year], params[:month])
+   users = User.all_for_lists
+   drinks = {'Ö' => 0.5, 'Sekt' => 5, 'Wein' => 5}
+%>
+<%= form_for(@liste) do |f| %>
+<div id="liste" class="table-responsive">
+  <h1>Getränkeliste <%= l(date, :format => '%B %Y')  %></h1>
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th></th>
+      <% drinks.each do |d| %>
+          <th class="text-center"<%= ' style=width:50%;' if d.first.eql? drinks.first.first %>>
+            <%= d.first  %>
+            <%= d.last.euro  %>
+          </th>
+      <% end %>
+
+      <td style="vertical-align: middle;font-size: 1.5em;">&nbsp;&nbsp;&Sigma;&nbsp;&nbsp;</td>
+    </tr>
+    </thead>
+    <tbody>
+    <% users.each do |user| %>
+        <tr>
+          <th>
+            <%= user.status %> <%= user.name %>
+          </th>
+          <% drinks.each do |d| %>
+              <td>
+                <%= f.text_field  %>
+                <input type="text" class="hidden-print" name="<%= user.id %>"/>
+              </td>
+          <% end %>
+          <td>&nbsp;</td>
+        </tr>
+    <% end %>
+
+    <% (19 - users.size).times do %>
+    <tr>
+      <th>
+        &nbsp;
+      </th>
+      <% drinks.each do |d| %>
+          <td>&nbsp;</td>
+      <% end %>
+      <td>&nbsp;</td>
+    </tr>
+<% end %>
+
+
+<tr>
+  <th>
+    SpeF
+  </th>
+  <% drinks.each do |d| %>
+      <td>&nbsp;</td>
+  <% end %>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <th>
+    CC
+  </th>
+  <% drinks.each do |d| %>
+      <td>&nbsp;</td>
+  <% end %>
+  <td>&nbsp;</td>
+</tr>
+    </tbody>
+
+  </table>
+</div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+<% end %>

@@ -7,6 +7,19 @@ class Numeric
   end
 end
 
+class Time
+  def weekdays
+    days_total = Time.days_in_month(self.month, self.year)
+    days = (1..days_total)
+    days = days.map { |d| Date.new(self.year, self.month, d) }
+    days.reject do |d|
+      d.saturday? or d.sunday?
+    end
+  end
+end
+
+
+
 # Initialize the Rails application.
 SampleApp::Application.initialize!
 

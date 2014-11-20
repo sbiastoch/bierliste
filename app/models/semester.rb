@@ -16,8 +16,18 @@ class Semester < ActiveRecord::Base
     end
     c
   }
+
   has_many :receipts
   has_many :categories
+  belongs_to :user
+
+  def xxx
+    self.user
+  end
+
+  def xxx=(u)
+    self.user = u
+  end
 
 
   validates :start, presence: true
