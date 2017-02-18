@@ -1,3 +1,44 @@
 // Place all the styles related to the Users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+@page {size: portrait;}
+@media print {
+    @page {
+        size: portrait !important;
+    }
+
+    h1 {
+        font-size:16pt;
+        text-align:left;
+    }
+
+    .letter div, .letter p {
+        margin-left:0!important;
+        margin-right:0!important;
+        font-size:12pt;
+    }
+
+    .letter {
+        margin-top:2.54cm;
+        page-break-after:always;
+    }
+    .kontoauszug {
+        margin-top:1.9cm;
+        page-break-after:always;
+    }
+
+    .letter-footer {
+        margin-top:65%;
+        font-size: 8pt;
+    }
+
+    .table {
+        width: auto !important;
+    }
+}
+@media print and (color) {
+   * {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+   }
+}

@@ -6,6 +6,9 @@ SampleApp::Application.routes.draw do
 
   resources :entries
 
+  post '/users/print' => 'users#print'
+
+
   get '/lists/food/' => 'list#food', month: Time.now.month.next, year: Time.now.year
   get '/lists/food/:month' => 'list#food', year: Time.now.year
   get '/lists/food/:year/:month' => 'list#food'

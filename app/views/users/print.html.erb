@@ -1,0 +1,4 @@
+<% @users.each do |user| %>
+    <% @user = user %>
+    <%= render :template => 'users/show.html.erb' %>
+<%end %>

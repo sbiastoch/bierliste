@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141010130329) do
+ActiveRecord::Schema.define(version: 20141125121819) do
 
   create_table "categories", force: true do |t|
     t.string   "code"
@@ -68,10 +68,9 @@ ActiveRecord::Schema.define(version: 20141010130329) do
     t.string   "password_digest"
     t.string   "remember_token"
     t.string   "status",          default: "F"
-    t.float    "balance",         default: 0.0
     t.boolean  "adh"
     t.boolean  "here"
-    t.float    "startsaldo"
+    t.float    "startsaldo",      default: 0.0
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

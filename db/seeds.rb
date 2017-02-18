@@ -97,7 +97,27 @@ User.create! name: 'Miksch', status: 'Gast', email: 'miksch@gmail.com', password
 User.create! name: 'Thorben Riesen', status: 'SpeF', email: 'riesen@gmail.com', password: '123456', password_confirmation: '123456', adh: false, here: false, startsaldo:0
 
 
+
+
 =begin
+
+
+martin_holst@web.de
+maxi_siebert@gmx.de
+hendrik.gaspar@gmail.com
+lennart.clasen@gmail.com
+uli.ehrat@gmail.com
+maxi.malik@googlemail.com
+jonas.bagdonat@web.de
+karl.oberberger@student.uni-tuebingen.de
+lennart.christian.meyer@gmail.com
+axel@prettl2.de
+dominik.heinrich@student.uni-tuebingen.de
+j.jakubeit@googlemail.com
+jarmin.eisele@gmail.com
+karstaedt@gmx.net
+
+
 Biastoch II 68.22
 Meyer VII 45
 Jakubeit -200.38

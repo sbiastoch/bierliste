@@ -2,10 +2,13 @@
    date = Time.new(params[:year], params[:month])
    users = User.all_for_lists
    drinks = {'Ö' => 0.5, 'Sekt' => 5, 'Wein' => 5}
+   sembreak = %w'2 3 8 9' # Feb & März, Aug & Sept
+   title = l(date, :format => '%B %Y')
+   title = Semester.current.semester_long_name.insert(-11, 'ferien') if sembreak.include? date.month.to_s
 %>
-<%= form_for(@liste) do |f| %>
+<%#= form_for(@liste) do |f| %>
 <div id="liste" class="table-responsive">
-  <h1>Getränkeliste <%= l(date, :format => '%B %Y')  %></h1>
+  <h1>Getränkeliste <%= title  %></h1>
 
   <table class="table">
     <thead>
@@ -29,7 +32,7 @@
           </th>
           <% drinks.each do |d| %>
               <td>
-                <%= f.text_field  %>
+                <%#= f.text_field  %>
                 <input type="text" class="hidden-print" name="<%= user.id %>"/>
               </td>
           <% end %>
@@ -73,6 +76,6 @@
   </table>
 </div>
     <div class="actions">
-      <%= f.submit %>
+      <%#= f.submit %>
     </div>
-<% end %>
+<%# end %>

@@ -25,6 +25,14 @@ class User < ActiveRecord::Base
   scope :adh, -> { where(adh:true) }
   scope :ao, -> { where(here:true) }
 
+  def balance
+    amounts = Entry.where(user: self).all.map(&:amount)
+    sum = amounts.inject(:+) unless amounts.nil?
+    balance = self.startsaldo + (sum||0)
+    balance = 0 if balance.nil?
+    balance
+  end
+
   def User.new_remember_token
     SecureRandom.urlsafe_base64
   end

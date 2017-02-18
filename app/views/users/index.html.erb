@@ -1,8 +1,25 @@
 <h1>Konten der Corpsbrüder</h1>
+<%
+   posbalances = User.all.map do |u| u.balance > 0 ? u.balance : 0 end
+   negbalances = User.all.map do |u| u.balance < 0 ? u.balance : 0 end
+
+   schulden= posbalances.inject(:+)
+   guthaben= negbalances.inject(:+)
+%>
+<p>Verbindlichkeiten von Corpsbrüdern gegenüber dem CC: <%= schulden.euro %> <br/>
+Verbindlichkeiten des CC gegenüber Corpsbrüdern: <%= guthaben.euro %> <br/>
+<b>Saldo des CC: <%= (schulden.to_f + guthaben.to_f).euro %></b></p>
+<%= form_tag users_print_path do |f| %>
+    <a href="javascript:$('input.allUser:not(:checked)').click()" id="allSelector">Alle</a>
+    <a href="javascript:$('input.allUser:checked').click()">Keine</a>
+    <a href="javascript:$('.creditUser').click()">Schulden</a>
+    <a href="javascript:$('.debitUser').click()">Guthaben</a>
+    <a href="javascript:$('.bannedUser').click()">Konsumverbot</a>
 <div class="container">
     <table class="table table-bordered table-striped">
       <thead>
         <tr>
+          <th></th>
           <th></th>
           <th>Name</th>
           <th>Saldo</th>
@@ -18,3 +35,5 @@
 
     <%= link_to 'Neues Konto anlegen', new_user_path %>
 </div>
+<%= submit_tag 'Drucken' %>
+<% end %>

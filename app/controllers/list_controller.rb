@@ -8,6 +8,6 @@ class ListController < ReceiptsController
   end
 
   def drinks
-    @liste = [1]
+    @liste
   end
 end

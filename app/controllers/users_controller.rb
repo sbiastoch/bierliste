@@ -19,10 +19,15 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @entries = @user.entries.paginate(:page => params[:page], :per_page => params[:per_page]).order('date DESC')
   end
 
   def index
     @users = User.all
+  end
+
+  def print
+    @users = User.find params['selected_users'].split(',')
   end
 
   def create
@@ -40,6 +45,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:status, :name, :email, :password, :password_confirmation, :balance, :adh, :here)
+    params.require(:user).permit(:status, :name, :email, :password, :password_confirmation, :balance, :adh, :here, :selected_users) if params[:user]
   end
 end

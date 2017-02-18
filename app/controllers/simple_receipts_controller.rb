@@ -19,7 +19,6 @@ class SimpleReceiptsController < ReceiptsController
                              receipt_params['date(3i)'].to_i),
               description: receipt_params[:description]
           )
-          the_user.update_attribute(:balance, the_user.balance.to_f - receipt_params[:amount].to_f) unless the_user.nil?
         end
       rescue => e
         flash[:errors] = 'Fehler'

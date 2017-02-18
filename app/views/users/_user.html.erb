@@ -11,11 +11,12 @@
     b = 255 if b > 255
     color = 'rgb('+r.to_i.to_s+','+g.to_i.to_s+','+b.to_i.to_s+')'
 
-
-
    stop = ((user.balance > 150) and (not user.name.eql? 'Lücke II'))
 %>
 <tr>
+  <td onclick="$(this).children().first()[0].click()" style="cursor:pointer;">
+    <%= check_box_tag 'selected_users[]', user.id, false, class: 'allUser '+(user.balance < 0 ? 'debitUser' : 'creditUser')+(user.balance > 150 ? ' bannedUser' : '') %>
+  </td>
   <td<%= ' style=background:#ecc;' if stop %>><%= link_to user.status, user %></td>
   <td<%= ' style=background:#ecc;' if stop %>>
     <%= link_to user.name, user %>

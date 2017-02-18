@@ -1,4 +1,4 @@
-<h1>Auszahlung</h1>
+<h1>Umlage</h1>
 <%= form_for(@receipt, as: :ShareReceipt) do |f| %>
     <script type="text/javascript" charset="utf-8">
         $(function () {
@@ -101,16 +101,11 @@
         </div>
     <% end %>
 
-    <p>
-      Zu verwenden bei:
-      <ul>
-        <li>Auszahlungen an Corpsbrüder</li>
-        <li>Abhebung vom Konto für Kasse</li>
-        <li>Einzahlung von Kasse zu Konto</li>
-      </ul>
-    </p>
-      <%= f.hidden_field :category_id, value: Semester.current.categories.where(name: 'Konto').last.id %>
-
+    <div class="field">
+      <%= f.label :category_id %>
+      <br>
+      <%= f.select :category_id, options_from_collection_for_select(Semester.current.categories, :id, :name) %>
+    </div>
     <div class="field">
       <%= f.label :description %>
       <br>
@@ -127,39 +122,59 @@
       <%= f.text_field :amount %>
 
 
-      <strong>Gutschrift an:</strong><br>
-      <%= f.radio_button(:credit_radio, 'cb', checked: @receipt.credit_users?) %>
-      <%= f.label(:credit_radio_cb, 'Corpsbrüder') %>
-
-      <div class="field credit-text" style="display: none">
-        <%= f.text_field :credit_users %>
-      </div>
-
-      <%= f.radio_button(:credit_radio, 'kto') %>
-      <%= f.label(:credit_radio_kto, 'Konto') %>
-
-      <%= f.radio_button(:credit_radio, 'cash') %>
-      <%= f.label(:credit_radio_cash, 'Kasse') %>
-
-
-
-
       <div class="field">
-        <strong>Geld kommt von:</strong><br>
+        <strong>Gutschrift/Einname/Dauerauftrag von:</strong><br>
+        <%= f.radio_button(:credit_radio, 'cb', checked: @receipt.credit_users?) %>
+        <%= f.label(:credit_radio_cb, 'Corpsbrüder') %>
+        <div class="field credit-text">
+          <%= f.text_field :credit_users %>
+          <a href="javascript:$('#ShareReceipt_credit_users').val('<%= User.adh.map(&:name).join(', ') %>');">adH</a>
+          <a href="javascript:$('#ShareReceipt_credit_users').val('<%= User.ao.map(&:name).join(', ') %>');">aO</a>
+        </div>
 
-        <%= f.radio_button(:debit_radio, 'kto', checked: (@receipt.debit_budget.code=='KTO')) %>
-        <%= f.label(:debit_radio_kto, 'Konto') %>
+        <%= f.radio_button(:credit_radio, 'kto') %>
+        <%= f.label(:credit_radio_kto, 'Konto') %>
 
-        <%= f.radio_button(:debit_radio, 'cash', checked: (@receipt.debit_budget.code=='BAR')) %>
-        <%= f.label(:debit_radio_cash, 'Kasse') %>
+        <%= f.radio_button(:credit_radio, 'cash') %>
+        <%= f.label(:credit_radio_cash, 'Kasse') %>
 
-        <div class="field debit-select" style="display: none">
-          <%= f.select :debit_budget, Semester.current.categories.reverse.map { |i| [i.name, i.id] }.reject { |i| !%w'Konto Kasse'.include? i[0] } %>
+        <%= f.radio_button(:credit_radio, 'einnahmen') %>
+        <%= f.label(:credit_radio_einnahmen, 'Einnahmen') %>
+
+        <%= f.radio_button(:credit_radio, 'budget') %>
+        <%= f.label(:credit_radio_budget, 'Budget') %>
+
+        <div class="field credit-select" style="display: none">
+          <%= f.select :credit_budget, Semester.current.categories.reverse.map { |i| [i.name, i.id] }, selected: Semester.current.categories.reverse.first.id %>
         </div>
 
 
       </div>
 
+      <strong>Lastschrift/Auszahlung:</strong><br>
+      <%= f.radio_button(:debit_radio, 'cb') %>
+      <%= f.label(:debit_radio_cb, 'Corpsbrüder') %>
+
+      <div class="field debit-text" style="display: none">
+        <%= f.text_field :debit_users %>
+        <a href="javascript:$('#ShareReceipt_debit_users').val('<%= User.adh.map(&:name).join(', ') %>');">adH</a>
+        <a href="javascript:$('#ShareReceipt_debit_users').val('<%= User.ao.map(&:name).join(', ') %>');">aO</a>
+      </div>
+
+      <%= f.radio_button(:debit_radio, 'kto') %>
+      <%= f.label(:debit_radio_kto, 'Konto') %>
+
+      <%= f.radio_button(:debit_radio, 'cash') %>
+      <%= f.label(:debit_radio_cash, 'Kasse') %>
+
+      <%= f.radio_button(:debit_radio, 'einnahmen') %>
+      <%= f.label(:debit_radio_einnahmen, 'Einnahmen') %>
+
+      <%= f.radio_button(:debit_radio, 'budget') %>
+      <%= f.label(:debit_radio_budget, 'Budget') %>
+      <div class="field debit-select" style="display: none">
+        <%= f.select :debit_budget, Semester.current.categories.reverse.map { |i| [i.name, i.id.to_s] }, selected: Semester.current.categories.reverse.first.id %>
+      </div>
 
       <div class="actions">
         <%= f.submit %>

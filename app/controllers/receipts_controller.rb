@@ -67,7 +67,7 @@ class ReceiptsController < ApplicationController
       if s.size == 1
         [s[0].strip => 1.0]
       else
-        if s[0].to_s.strip =~ /^(\d+|\d+\.\d+)$/ # multiplikator steht vorne
+        if s[0].to_s.strip =~ /^(\d+|\d+[\.,]\d+)$/ # multiplikator steht vorne
           [s[1].strip => s[0].to_f]
         else
           [s[0].strip => s[1].to_f]
@@ -90,15 +90,15 @@ class ReceiptsController < ApplicationController
       #    redirect_to ('new_'+@type.constantize+'_path').constantize
         else
           factor = name.values[0]
-          new_entry category, the_user, factor * unit
+          new_entry category, the_user, factor * unit, factor
         end
       end
     else
-      new_entry category, nil, amount # for budget entry
+      new_entry category, nil, amount, 1 # for budget entry
     end
   end
 
-  def new_entry(category, user, amount)
+  def new_entry(category, user, amount, factor)
 
     Entry.create!(
         semester: Semester.current,
@@ -109,7 +109,10 @@ class ReceiptsController < ApplicationController
         date: Date.new(receipt_params['date(1i)'].to_i,
                        receipt_params['date(2i)'].to_i,
                        receipt_params['date(3i)'].to_i),
-        description: receipt_params[:description]
+        description: receipt_params[:description]+
+            (factor != 1 ?
+             ' · (' + (factor.to_f.eql?(factor.to_i.to_f) ? factor.to_i.to_s : factor.to_f.to_s) +'x)'
+            : '')
     )
   end
 

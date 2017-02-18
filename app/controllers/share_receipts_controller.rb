@@ -8,12 +8,19 @@ class ShareReceiptsController < ReceiptsController
 
 
         make_entries(
+            @receipt.credit_users?,
+            @receipt.debit_users?,
+            @receipt.credit_budget?,
+            @receipt.debit_budget?,
+        )
+=begin
+        make_entries(
             receipt_params[:credit_radio].to_s.eql?('cb'),
             receipt_params[:debit_radio].to_s.eql?('cb'),
             !receipt_params[:credit_radio].to_s.eql?('cb'),
             !receipt_params[:debit_radio].to_s.eql?('cb'),
         )
-
+=end
       rescue => e
         flash[:error] = 'Fehler: '+e.message
         puts e.backtrace
@@ -27,14 +34,23 @@ class ShareReceiptsController < ReceiptsController
   def update
     @receipt.entries.delete_all
 
+
+    if @receipt.update(receipt_params)
+
+      make_entries(
+          @receipt.credit_users?,
+          @receipt.debit_users?,
+          @receipt.credit_budget?,
+          @receipt.debit_budget?,
+      )
+=begin
     make_entries(
         receipt_params[:credit_radio].to_s.eql?('cb'),
         receipt_params[:debit_radio].to_s.eql?('cb'),
         !receipt_params[:credit_radio].to_s.eql?('cb'),
         !receipt_params[:debit_radio].to_s.eql?('cb'),
     )
-
-    if @receipt.update(receipt_params)
+=end
       redirect_to @receipt, notice: 'ShareReceipt was successfully updated.'
     else
       render action: 'edit'
@@ -44,30 +60,32 @@ class ShareReceiptsController < ReceiptsController
   private
 
   def make_entries(credit_users, debit_users, credit_budget, debit_budget)
-    if (credit_users ^ credit_budget) and (debit_users ^ debit_budget)
+    if (credit_users.to_s.length ^ credit_budget.to_s.length) and (debit_users.to_s.length ^ debit_budget.to_s.length)
 
       amount = receipt_params[:amount].to_s.to_f
-      main_category = Category.find(receipt_params[:category_id]) unless receipt_params[:category_id].nil?
-      debit_category = Category.find(receipt_params[:debit_budget]) unless receipt_params[:debit_budget].nil?
-      credit_category = Category.find(receipt_params[:credit_budget]) unless receipt_params[:credit_budget].nil?
 
-      if credit_users and receipt_params[:credit_users]
-        users_str = receipt_params[:credit_users].to_s
-        create_entry(users_str, main_category, -amount)
-      end
-      if debit_users and receipt_params[:debit_users]
-        users_str = receipt_params[:debit_users].to_s
-        create_entry(users_str, main_category, amount)
-      end
+      credit_users_str = receipt_params[:credit_users].to_s
+      debit_users_str = receipt_params[:debit_users].to_s
 
-      if credit_budget and !credit_category.nil?
-        amount = -amount if %w'Konto Kasse'.include? credit_category.name
-        create_entry(nil, credit_category, -amount)
-      end
-      if debit_budget and !debit_category.nil?
-        amount = -amount if %w'Konto Kasse'.include? debit_category.name
-        create_entry(nil, debit_category, amount)
-      end
+      category = Category.find(receipt_params[:category_id]) unless receipt_params[:category_id].to_s.length == 0
+      debit_category = Category.find(receipt_params[:debit_budget]) unless receipt_params[:debit_budget].to_s.length == 0
+      credit_category = Category.find(receipt_params[:credit_budget]) unless receipt_params[:credit_budget].to_s.length == 0
+
+      debit_amount  = -amount
+      credit_amount = amount
+
+      #FIXME konto -> budget, budget->budget, auszahlungen
+
+      credit_amount *= -1 if %w'Konto Kasse Einnahmen'.include? credit_category.try :name
+      debit_amount *= -1 if %w'Konto Kasse Einnahmen'.include? debit_category.try :name
+
+      debit_amount *= -1 if credit_category and debit_category
+
+      create_entry(credit_users_str, category, credit_amount)   if credit_users   and receipt_params[:credit_users]
+      create_entry(debit_users_str, category, debit_amount)     if debit_users    and receipt_params[:debit_users]
+      create_entry(nil, credit_category, credit_amount)  if credit_budget  and !credit_category.nil?
+      create_entry(nil, debit_category, debit_amount)     if debit_budget   and !debit_category.nil?
+
     else
       puts 'Fehlende Parameter!'
     end
@@ -86,8 +104,8 @@ class ShareReceiptsController < ReceiptsController
         :credit_budget,
         :debit_budget,
         :debit_users,
-        :credit_radio,
-        :debit_radio,
+    #    :credit_radio,
+     #   :debit_radio,
         :semester_id
     )
   end

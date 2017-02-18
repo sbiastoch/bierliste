@@ -11,7 +11,7 @@
   <strong>Abrechnungsende:</strong>
   <%= @semester.end %>
 
-  <table class="table table-striped table-bordered">
+  <table class="table table-striped table-bordered" style="margin-left: -180px">
     <thead>
     <tr>
       <th>Beleg</th>
@@ -44,6 +44,7 @@
        entries = cats.map { |budget| budget.entries }
        entries = entries.flatten
        entries = entries.reject { |i| !i.user.nil? }
+       entries.sort_by! { |entry| entry.date}
        receipt = entries.group_by &:receipt_id
     %>
     <% receipt.each do |receipt_entries_ary| %>
@@ -52,7 +53,7 @@
         <tr onclick="location.href='<%= receipt_path(receipt) %>'" style="cursor: pointer">
           <td><%= receipt.code %></td>
           <td><%= receipt.date %></td>
-          <td><%= receipt.description %></td>
+          <td title="<%= receipt.entries.map{|x|x.user.try(:fullname)}.join(', ')%>"><%= receipt.description %></td>
           <% Semester.current.categories.each do |budget| %>
               <td>
               <% receipt_entries.each do |entry| %>
